@@ -4,13 +4,14 @@
 // @description         Creates polygon of Tennessee borders
 // @include             /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require             https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=203355
-// @version             1.0
+// @version             2018.02.27.001
 // @grant               none
 // @license             http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @copyright           2014 davielde
 // ==/UserScript==
 
 /* Modified by grsmhiker from davielde's WME MapRaid Overlay script using data from the state of Tennessee http://tnmap.tn.gov/TNMapResources.asp*/
+/* Updated on 2/27/2018 by MapOMatic, to address upcoming changes to WME code.
 
 /*===About this script===
 This will add a "TN Municipalities (some)" layer to the layers menu which, when enabled, will overlay Tennessee incorporated municipalities on the map.
@@ -34,8 +35,8 @@ setTimeout(InitMapRaidOverlay, 1000);
 
 function AddRaidPolygon(raidLayer,groupPoints,groupColor,groupNumber){
 
-    var mro_Map = Waze.map;
-    var mro_OL = OpenLayers;
+    var mro_Map = W.map;
+    var mro_OL = OL;
     var raidGroupLabel = groupNumber;
     var groupName = groupNumber;
 
@@ -62,7 +63,7 @@ function AddRaidPolygon(raidLayer,groupPoints,groupColor,groupNumber){
 
     var pnt= [];
     for(i=0;i<groupPoints.length;i++){
-        convPoint = new OpenLayers.Geometry.Point(groupPoints[i].lon,groupPoints[i].lat).transform(new OpenLayers.Projection("EPSG:4326"), mro_Map.getProjectionObject());
+        convPoint = new OL.Geometry.Point(groupPoints[i].lon,groupPoints[i].lat).transform(new OL.Projection("EPSG:4326"), mro_Map.getProjectionObject());
         //console.log('MapRaid: ' + JSON.stringify(groupPoints[i]) + ', ' + groupPoints[i].lon + ', ' + groupPoints[i].lat);
         pnt.push(convPoint);
     }
@@ -107,8 +108,8 @@ function generateholes(mro_Map, raid_mapLayer, UntitledPolygon){
 
 function Subtract(bigFeature, smallFeature) {
 
-    var newPolygon = new OpenLayers.Geometry.Polygon(bigFeature.geometry.components);
-    var newFeature = new OpenLayers.Feature.Vector(newPolygon);
+    var newPolygon = new OL.Geometry.Polygon(bigFeature.geometry.components);
+    var newFeature = new OL.Feature.Vector(newPolygon);
 
     newPolygon.addComponent(smallFeature.geometry.components[0]);
 
@@ -116,11 +117,11 @@ function Subtract(bigFeature, smallFeature) {
 }
 
 function CurrentRaidLocation(raid_mapLayer){
-    var mro_Map = Waze.map;
+    var mro_Map = W.map;
 
     for(i=0;i<raid_mapLayer.features.length;i++){
         var raidMapCenter = mro_Map.getCenter();
-        var raidCenterPoint = new OpenLayers.Geometry.Point(raidMapCenter.lon,raidMapCenter.lat);
+        var raidCenterPoint = new OL.Geometry.Point(raidMapCenter.lon,raidMapCenter.lat);
         var raidCenterCheck = raid_mapLayer.features[i].geometry.components[0].containsPoint(raidCenterPoint);
 		var holes = raid_mapLayer.features[i].attributes.holes;
 		
@@ -155,8 +156,8 @@ function CurrentRaidLocation(raid_mapLayer){
 
 function InitMapRaidOverlay(){
 
-    var mro_Map = Waze.map;
-    var mro_OL = OpenLayers;
+    var mro_Map = W.map;
+    var mro_OL = OL;
 
     //if (!mro_Map) return;
     //if (!mro_OL) return;
@@ -1214,7 +1215,7 @@ AddRaidPolygon(raid_mapLayer, Farragut,"#CC98AD","Farragut");
  
 	
     setTimeout(function(){CurrentRaidLocation(raid_mapLayer);},3000);
-    mro_Map.events.register("moveend", Waze.map, function(){ setTimeout(function(){CurrentRaidLocation(raid_mapLayer);},1500);});
-    mro_Map.events.register("zoomend", Waze.map, function(){ setTimeout(function(){CurrentRaidLocation(raid_mapLayer);},1500);});
+    mro_Map.events.register("moveend", W.map, function(){ setTimeout(function(){CurrentRaidLocation(raid_mapLayer);},1500);});
+    mro_Map.events.register("zoomend", W.map, function(){ setTimeout(function(){CurrentRaidLocation(raid_mapLayer);},1500);});
        
 }
