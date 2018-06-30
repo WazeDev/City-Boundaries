@@ -4,7 +4,7 @@
 // @description         This script has been deprecated. Please install WME Cities Overlay instead.
 // @include             /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @require             https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=203355
-// @version             2018.02.27.001
+// @version             2018.06.29.001
 // @grant               none
 // @license             http://creativecommons.org/licenses/by-nc-sa/3.0/
 // @copyright           2014 davielde
